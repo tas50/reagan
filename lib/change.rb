@@ -13,7 +13,7 @@ end
 class ReaganChange
   attr_accessor :files
   def initialize
-    @config = YAML.load_file('config.yml')
+    @config = YAML.load_file('/etc/reagan.yml')
     @files = list_files_changed
   end
 

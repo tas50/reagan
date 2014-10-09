@@ -1,5 +1,6 @@
 Readme
 	- Document how to set the thing up
+Handle config file path better (allow specifying a path)
 Test class with subclasses for each test
 Build a gem
 Natively handle cookbook test vs. shelling out

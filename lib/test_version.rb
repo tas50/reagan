@@ -13,7 +13,7 @@ end
 # performs tests on the passed in cookbook
 class ReaganTestVersion
   def initialize(cookbook)
-    @config = YAML.load_file('config.yml')
+    @config = YAML.load_file('/etc/reagan.yml')
     @cookbook = cookbook
   end
 
