@@ -1,0 +1,9 @@
+github:
+  auth_token: 1234abcde1234abcde
+  repo: MyCo/chef-repo
+jenkins:
+  workspace_dir: '/home/jenkins/workspace/chef-repo/'
+chef:
+  pem_path: '/home/jenkins/.chef/jenkins.pem'
+  client_name: 'jenkins'
+  server_url: https://chef.myco.co

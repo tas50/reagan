@@ -1,0 +1,7 @@
+Readme
+	- Document how to set the thing up
+	- Document requirements
+Test class with subclasses for each test
+Build a gem
+Natively handle cookbook test vs. shelling out
+Add logic to disable / enable tests via config
