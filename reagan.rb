@@ -27,8 +27,12 @@ cookbooks = ReaganChange.new.files
 pretty_print('The following cookbooks were changed')
 cookbooks.each { |cb| puts cb }
 
+results = []
 cookbooks.each do |cookbook|
   pretty_print("Testing cookbook #{cookbook}")
-  ReaganTestVersion.new(cookbook).test
-  ReaganTestKnife.new(cookbook).test
+  results << ReaganTestVersion.new(cookbook).test
+  results <<  ReaganTestKnife.new(cookbook).test
 end
+
+# if any test failed then exit 1 so jenkins can pick up the failure
+exit 1 if results.include?(false)
