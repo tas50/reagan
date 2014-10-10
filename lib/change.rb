@@ -35,6 +35,11 @@ class ReaganChange
   end
 
   def list_files_changed
+    # make sure the Github Pull Request plugin was used to pass in the pull ID
+    fail 'ghprbPullId environmental variable not set.  Cannot continue' unless ENV['ghprbPullId']
+
+    puts "Grabbing contents of pull request #{ENV['ghprbPullId']}\n"
+
     gh = Octokit::Client.new(:access_token => @config['github'] ['auth_token'])
 
     pull_files = files_from_pull(gh.pull_request_files(@config ['github']['repo'], ENV['ghprbPullId']))
