@@ -24,8 +24,9 @@ class Reagan
   require 'test_version'
 
   attr_accessor :config
-  def initialize
+  def initialize(options)
     @@config = YAML.load_file('/etc/reagan.yml')
+    @options = options
   end
 
   # nicely prints marques
@@ -37,10 +38,14 @@ class Reagan
 
   # grab the changes and run the tests
   def run
-    # grab all cookbooks changed
-    cookbooks = Change.new.files
+    # use passed in list of cookbooks or grab from GH
+    if @options[:cookbooks]
+      cookbooks = @options[:cookbooks].split(',')
+    else
+      cookbooks = Change.new(@options).files
+    end
 
-    pretty_print('The following cookbooks were changed')
+    pretty_print('The following cookbooks will be tested')
     cookbooks.each { |cb| puts cb }
 
     results = []

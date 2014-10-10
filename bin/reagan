@@ -20,5 +20,26 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'reagan'
+require 'optparse'
 
-Reagan.new.run
+options = { :pull => nil, :cookbooks => nil }
+
+parser = OptionParser.new do |opts|
+  opts.banner = 'Usage: reagan [options]'
+  opts.on('-c', '--cookbooks cookbook', 'Cookbooks to test (comma separated)') do |cookbooks|
+    options[:cookbooks] = cookbooks
+  end
+
+  opts.on('-p', '--pull_num num', 'Pull Number to test') do |pull|
+    options[:pull] = pull
+  end
+
+  opts.on('-h', '--help', 'Displays Help') do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+
+Reagan.new(options).run

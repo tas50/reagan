@@ -27,7 +27,8 @@ end
 # determines changed files in the commit
 class Change < Reagan
   attr_accessor :files
-  def initialize
+  def initialize(options)
+    @options = options
     @files = list_files_changed
   end
 
@@ -48,15 +49,24 @@ class Change < Reagan
     files
   end
 
-  def list_files_changed
-    # make sure the Github Pull Request plugin was used to pass in the pull ID
-    fail 'ghprbPullId environmental variable not set.  Cannot continue' unless ENV['ghprbPullId']
+  def pull_num
+    if @options[:pull]
+      pull = @options[:pull]
+    elsif ENV['ghprbPullId']
+      pull = ENV['ghprbPullId']
+    else
+      fail 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'
+    end
+    pull
+  end
 
-    puts "Grabbing contents of pull request #{ENV['ghprbPullId']}\n"
+  def list_files_changed
+    pull = pull_num
+    puts "Grabbing contents of pull request #{pull}\n"
 
     gh = Octokit::Client.new(:access_token => @@config['github']['auth_token'])
 
-    pull_files = files_from_pull(gh.pull_request_files(@@config ['github']['repo'], ENV['ghprbPullId']))
+    pull_files = files_from_pull(gh.pull_request_files(@@config ['github']['repo'], pull))
     unique_cookbooks(pull_files)
   end
 end
