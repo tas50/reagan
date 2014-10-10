@@ -29,7 +29,7 @@ class TestKnife < Reagan
     result = system "knife cookbook test -o #{File.join(@@config['jenkins']['workspace_dir'], 'cookbooks')} #{@cookbook} > /dev/null 2>&1"
 
     puts 'Running knife cookbook test:'
-    puts result ? '    PASS: Knife cookbook test was successful' : 'FAIL: Knife cookbookk test was NOT successful'
+    puts result ? '    PASS: Knife cookbook test was successful' : '    FAIL: Knife cookbookk test was NOT successful'
     result
   end
 end
