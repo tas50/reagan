@@ -25,7 +25,7 @@ class Reagan
 
   attr_accessor :config
   def initialize(options)
-    @@config = YAML.load_file('/etc/reagan.yml')
+    @@config = YAML.load_file(options[:config])
     @options = options
   end
 
