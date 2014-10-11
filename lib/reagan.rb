@@ -22,6 +22,7 @@ class Reagan
   require 'change'
   require 'test_knife'
   require 'test_version'
+  require 'test_reagan'
 
   attr_accessor :config
   def initialize(options)
@@ -53,6 +54,7 @@ class Reagan
       pretty_print("Testing cookbook #{cookbook}")
       results << TestVersion.new(cookbook).test
       results <<  TestKnife.new(cookbook).test
+      results <<  TestReagan.new(cookbook).test
     end
 
     # if any test failed then exit 1 so jenkins can pick up the failure

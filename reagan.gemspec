@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'reagan'
-  s.version     = '0.3.0'
+  s.version     = '0.4.0'
   s.date        = Date.today.to_s
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ['README.md', 'LICENSE']
@@ -17,4 +17,5 @@ Gem::Specification.new do |s|
     'http://www.github.com/tas50/reagan'
   s.license = 'Apache-2.0'
   s.executables << 'reagan'
+  s.required_ruby_version = '>= 1.9.3'
 end
