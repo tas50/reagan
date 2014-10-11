@@ -58,7 +58,7 @@ end
  * Chef client_name: The name of the client for the jenkins chef install on your Jenkins host (not the server's client name)
  * Chef server_url: The full URL of your Chef server
 
- 5) At this point you should be able to open a test pull request with
+5) At this point you should be able to open a test pull request with
 
 
 
