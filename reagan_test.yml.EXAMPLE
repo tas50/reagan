@@ -1,0 +1,3 @@
+tests:
+  - rubocop .
+  - foodcritic . -f any --tags ~FC001 --tags ~FC019
