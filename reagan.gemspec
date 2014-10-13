@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'chef', '~> 11.0'
   s.add_dependency 'ridley', '~> 4.0'
   s.add_development_dependency 'rake', '~> 10.0'
-  s.files       = %w(Rakefile README.md LICENSE bin/reagan reagan.yml.EXAMPLE) + Dir.glob('lib/*')
+  s.files       = %w(Rakefile README.md LICENSE bin/reagan reagan.yml.EXAMPLE reagan_test.yml.EXAMPLE) + Dir.glob('lib/*')
   s.homepage    =
     'http://www.github.com/tas50/reagan'
   s.license = 'Apache-2.0'

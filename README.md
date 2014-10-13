@@ -5,7 +5,7 @@ Trust But Verify - Ruby Jenkins build script that automates the testing of indiv
 
 * Ensure versions are bumped in cookbooks vs. the  current version on the server
 * Validate ruby / templates according to knife cookbook test
-* Optionally test anything present in a per cookbook rake task called reagan_test (rubocop? foodcritic? chefspec?)
+* Optionally run any commands in a per cookbook reagan_test.yml file (rubocop? foodcritic? chefspec?)
 
 ##Requirements
 * Ruby 1.9.3 (rbenv Jenkins plugin suggested to get more modern Ruby)
@@ -58,7 +58,7 @@ end
  * Chef client_name: The name of the client for the jenkins chef install on your Jenkins host (not the server's client name)
  * Chef server_url: The full URL of your Chef server
 
-5) At this point you should be able to open a test pull request with
+5) At this point you should be able to open a test pull request
 
 
 
