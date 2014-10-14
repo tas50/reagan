@@ -52,8 +52,8 @@ class Reagan
     results = []
     cookbooks.each do |cookbook|
       pretty_print("Testing cookbook #{cookbook}")
-      results << TestVersion.new(cookbook).test
       results <<  TestKnife.new(cookbook).test
+      results << TestVersion.new(cookbook).test
       results <<  TestReagan.new(cookbook).test
     end
 
