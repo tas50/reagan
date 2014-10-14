@@ -34,16 +34,16 @@ class TestReagan < Reagan
       # change into the cookbook dir so rake tests run locally
       Dir.chdir(File.join(@@config['jenkins']['workspace_dir'], 'cookbooks', @cookbook))
 
-      pass = true
+      status = true
       reagan_def['tests'].each do |test|
         result = system test
-        pass = false if result == false
+        status = false if result == false
       end
-      puts pass ? '    PASS: reagan_test.yml test was successful' : '    FAIL: reagan_test.yml test was NOT successful'
-      pass
+      puts status ? '    PASS: reagan_test.yml test was successful' : '    FAIL: reagan_test.yml test was NOT successful'
+      status
     else
       puts '    SKIP: No reagan_test.yml file found in the cookbook path. Skipping test'
+      status
     end
-    true
   end
 end
