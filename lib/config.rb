@@ -33,28 +33,25 @@ class ReaganConfig
 
   # loads the reagan.yml config file from /etc/reagan.yml or the passed location
   def load_config_file
-    begin
-      config = YAML.load_file(@flags[:config])
-      if config == false
-        puts "ERROR: Reagan config at #{@flags[:config]} does not contain any configuration data"
-        exit 1
-      end
-      config
-    rescue Errno::ENOENT
-      puts "ERROR: Cannot load Reagan config file at #{@flags[:config]}"
-      exit 1
-    rescue Psych::SyntaxError
-      puts "ERROR: Syntax error in Reagan config file at #{@flags[:config]}"
+    config = YAML.load_file(@flags[:config])
+    if config == false
+      puts "ERROR: Reagan config at #{@flags[:config]} does not contain any configuration data"
       exit 1
     end
+    config
+  rescue Errno::ENOENT
+    puts "ERROR: Cannot load Reagan config file at #{@flags[:config]}"
+    exit 1
+  rescue Psych::SyntaxError
+    puts "ERROR: Syntax error in Reagan config file at #{@flags[:config]}"
+    exit 1
   end
 
   # join the config file with the passed flags into a single object
   def build_config
     config = @config_file
     config['flags'] = {}
-    @flags.each{|k,v| config['flags'][k.to_s]=v}
+    @flags.each { |k, v| config['flags'][k.to_s] = v }
     config
   end
-
 end

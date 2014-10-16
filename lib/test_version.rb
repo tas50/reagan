@@ -49,7 +49,7 @@ class  TestVersion < Reagan
         )
       server_con.cookbook.all[@cookbook][0]
     rescue Ridley::Errors::ConnectionFailed
-      puts "    ERROR: Failed to connect to the Chef server. Cannot continue"
+      puts '    ERROR: Failed to connect to the Chef server. Cannot continue'
       exit 1
     end
   end
