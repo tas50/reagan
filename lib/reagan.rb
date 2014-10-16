@@ -23,11 +23,12 @@ class Reagan
   require 'test_knife'
   require 'test_version'
   require 'test_reagan'
+  require 'test_json'
 
   attr_accessor :config
   def initialize(flags)
     @@config = ReaganConfig.new(flags).settings
-    @cookbooks = Change.new.files
+    @changes = Change.new.files
   end
 
   # nicely prints marques
@@ -39,21 +40,26 @@ class Reagan
 
   # run tests on each changed cookbook
   def run
-    # exit with a friendly message if no cookbooks have been changed
-    if @cookbooks.empty?
+    # exit with a friendly message if nothing we test has been changed
+    if @changes['json'].empty? && @changes['cookbooks'].empty?
       pretty_print('Nothing to test in this change. Reagan approves')
       exit 0
     end
 
-    pretty_print('The following cookbooks will be tested')
-    @cookbooks.each { |cb| puts cb }
+    pretty_print('The following cookbooks & json files will be tested')
+    @changes['cookbooks'].each { |cb| puts cb }
+    @changes['json'].each { |json| puts json }
 
     results = []
-    @cookbooks.each do |cookbook|
+    @changes['cookbooks'].each do |cookbook|
       pretty_print("Testing cookbook #{cookbook}")
       results <<  TestKnife.new(cookbook).test
       results << TestVersion.new(cookbook).test
       results <<  TestReagan.new(cookbook).test
+    end
+    @changes['json'].each do |file|
+      pretty_print("Testing JSON file #{file}")
+      results <<  TestJSON.new(file).test
     end
 
     # print success or failure

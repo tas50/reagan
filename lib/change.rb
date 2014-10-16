@@ -28,18 +28,48 @@ end
 class Change < Reagan
   attr_accessor :files
   def initialize
-    @files = list_files_changed
+    @files = files_to_test
   end
 
-  def unique_cookbooks(files)
-    cookbooks = []
-    files.each do |file|
-      path_array = file.split('/')
-      cookbooks << path_array[1] if path_array[0].match('^cookbooks')
+  # return hash of json files / cookbooks that have been changed
+  def files_to_test
+    if @@config['flags']['override_cookbooks']
+      files_from_override
+    else
+      pull = pull_num
+      puts "Grabbing contents of pull request #{pull}\n"
+      hash_builder(query_gh(pull))
     end
-    cookbooks.to_set
   end
 
+  # build a files hash based on the override cookbooks passed by the user
+  def files_from_override
+    files = {}
+    files['json'] = []
+    files['cookbooks'] = @@config['flags']['override_cookbooks'].split(',')
+    files
+  end
+
+  # fetch pull num from either ENV or CLI param
+  def pull_num
+    if @@config['flags']['pull']
+      pull = @@config['flags']['pull']
+    elsif ENV['ghprbPullId']
+      pull = ENV['ghprbPullId']
+    else
+      puts 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'
+      exit 1
+    end
+    pull
+  end
+
+  # queries github for the files that have changed
+  def query_gh(pull_num)
+    gh = Octokit::Client.new(:access_token => @@config['github']['auth_token'])
+    files_from_pull(gh.pull_request_files(@@config ['github']['repo'], pull_num))
+  end
+
+  # convert pull request response to array of changed files
   def files_from_pull(pull_changes)
     files = []
     pull_changes.each do |file|
@@ -48,29 +78,22 @@ class Change < Reagan
     files
   end
 
-  def pull_num
-    if @@config['flags']['pull']
-      pull = @@config['flags']['pull']
-    elsif ENV['ghprbPullId']
-      pull = ENV['ghprbPullId']
-    else
-      fail 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'
+  # builds a hash of files / cookbooks that changed based on the pull data from GH
+  def hash_builder(pull_files)
+    files = {}
+    files['json'] = []
+    files['cookbooks'] = []
+    cookbooks = []
+
+    pull_files.each do |file|
+      # populate json array if file is json
+      files['json'] << file && next if file.match('.json$')
+
+      # populate cookbooks array if filename starts with cookbooks
+      cookbooks << file.split('/')[1]   if  file.match('^cookbooks')
     end
-    pull
-  end
-
-  # return list of cookbooks changed either from override value or from polling github pull request
-  def list_files_changed
-    if @@config['flags']['cookbooks']
-      @@config['flags']['cookbooks'].split(',')
-    else
-      pull = pull_num
-      puts "Grabbing contents of pull request #{pull}\n"
-
-      gh = Octokit::Client.new(:access_token => @@config['github']['auth_token'])
-
-      pull_files = files_from_pull(gh.pull_request_files(@@config ['github']['repo'], pull))
-      unique_cookbooks(pull_files)
-    end
+    # set cookbooks array to set to dedupe list of cookbooks
+    files['cookbooks'] = cookbooks.to_set
+    files
   end
 end
