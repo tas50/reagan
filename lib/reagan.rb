@@ -39,6 +39,12 @@ class Reagan
 
   # run tests on each changed cookbook
   def run
+    # exit with a friendly message if no cookbooks have been changed
+    if @cookbooks.empty?
+      pretty_print('Nothing to test in this change. Reagan approves')
+      exit 0
+    end
+
     pretty_print('The following cookbooks will be tested')
     @cookbooks.each { |cb| puts cb }
 
