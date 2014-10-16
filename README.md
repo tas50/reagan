@@ -1,11 +1,12 @@
 reagan
 ======
 
-Trust But Verify - Ruby Jenkins build script that automates the testing of individual Chef cookbooks in a monolithic chef-repo.  Reagan allows you to test only the cookbooks that have changed in a particular pull request and includes the following tests:
+Trust But Verify - Ruby Jenkins build script that automates the testing of individual items in a monolithic chef-repo.  Reagan allows you to test only the cookbooks or roles/environments that have changed in a particular pull request and includes the following tests:
 
 * Ensure versions are bumped in cookbooks vs. the  current version on the server
 * Validate ruby / templates according to knife cookbook test
 * Optionally run any commands in a per cookbook reagan_test.yml file (rubocop? foodcritic? chefspec?)
+* Validate that JSON files parse
 
 ##Requirements
 * Ruby 1.9.3 (rbenv Jenkins plugin suggested to get more modern Ruby)
