@@ -1,3 +1,0 @@
-Document the switch from Rakefiles -> reagan.yml
-Natively handle cookbook test vs. shelling out
-Add logic to disable / enable tests via config
