@@ -27,8 +27,7 @@ end
 # determines changed files in the commit
 class Change < Reagan
   attr_accessor :files
-  def initialize(options)
-    @options = options
+  def initialize
     @files = list_files_changed
   end
 
@@ -50,8 +49,8 @@ class Change < Reagan
   end
 
   def pull_num
-    if @options[:pull]
-      pull = @options[:pull]
+    if @@config['flags']['pull']
+      pull = @@config['flags']['pull']
     elsif ENV['ghprbPullId']
       pull = ENV['ghprbPullId']
     else
@@ -60,13 +59,18 @@ class Change < Reagan
     pull
   end
 
+  # return list of cookbooks changed either from override value or from polling github pull request
   def list_files_changed
-    pull = pull_num
-    puts "Grabbing contents of pull request #{pull}\n"
+    if @@config['flags']['cookbooks']
+      @@config['flags']['cookbooks'].split(',')
+    else
+      pull = pull_num
+      puts "Grabbing contents of pull request #{pull}\n"
 
-    gh = Octokit::Client.new(:access_token => @@config['github']['auth_token'])
+      gh = Octokit::Client.new(:access_token => @@config['github']['auth_token'])
 
-    pull_files = files_from_pull(gh.pull_request_files(@@config ['github']['repo'], pull))
-    unique_cookbooks(pull_files)
+      pull_files = files_from_pull(gh.pull_request_files(@@config ['github']['repo'], pull))
+      unique_cookbooks(pull_files)
+    end
   end
 end

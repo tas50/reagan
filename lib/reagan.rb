@@ -18,16 +18,16 @@
 
 # the main class for the reagan app.  gets called by the reagan bin
 class Reagan
-  require 'yaml'
+  require 'config'
   require 'change'
   require 'test_knife'
   require 'test_version'
   require 'test_reagan'
 
   attr_accessor :config
-  def initialize(options)
-    @@config = YAML.load_file(options[:config])
-    @options = options
+  def initialize(flags)
+    @@config = ReaganConfig.new(flags).settings
+    @cookbooks = Change.new.files
   end
 
   # nicely prints marques
@@ -37,27 +37,25 @@ class Reagan
     puts "\n"
   end
 
-  # grab the changes and run the tests
+  # run tests on each changed cookbook
   def run
-    # use passed in list of cookbooks or grab from GH
-    if @options[:cookbooks]
-      cookbooks = @options[:cookbooks].split(',')
-    else
-      cookbooks = Change.new(@options).files
-    end
-
     pretty_print('The following cookbooks will be tested')
-    cookbooks.each { |cb| puts cb }
+    @cookbooks.each { |cb| puts cb }
 
     results = []
-    cookbooks.each do |cookbook|
+    @cookbooks.each do |cookbook|
       pretty_print("Testing cookbook #{cookbook}")
       results <<  TestKnife.new(cookbook).test
       results << TestVersion.new(cookbook).test
       results <<  TestReagan.new(cookbook).test
     end
 
+    # print success or failure
+    failure = results.include?(false)
+    text = failure ? "Reagan testing has failed" : "All Reagan tests have suceeded"
+    pretty_print(text)
+
     # if any test failed then exit 1 so jenkins can pick up the failure
-    exit 1 if results.include?(false)
+    exit 1 if failure
   end
 end
