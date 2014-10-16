@@ -40,13 +40,18 @@ class  TestVersion < Reagan
   # grab the most recent version of the cookbook on the chef server
   def check_server_version
     Ridley::Logging.logger.level = Logger.const_get 'ERROR'
-    server_con = Ridley.new(
-        server_url: @@config['chef']['server_url'],
-        client_name: @@config['chef']['client_name'],
-        client_key: @@config['chef']['pem_path'],
-        ssl: { verify: false }
-      )
-    server_con.cookbook.all[@cookbook][0]
+    begin
+      server_con = Ridley.new(
+          server_url: @@config['chef']['server_url'],
+          client_name: @@config['chef']['client_name'],
+          client_key: @@config['chef']['pem_path'],
+          ssl: { verify: false }
+        )
+      server_con.cookbook.all[@cookbook][0]
+    rescue Ridley::Errors::ConnectionFailed
+      puts "    ERROR: Failed to connect to the Chef server. Cannot continue"
+      exit 1
+    end
   end
 
   # performs version update test
