@@ -58,8 +58,10 @@ class Reagan
     # print objects that will be tested
     pretty_print('The following chef objects will be tested')
     %w(cookbooks roles environments data_bags).each do |type|
-      puts "#{type}:"
-      @changes[type].each { |obj| puts '  ' + obj }
+      unless @changes[type].empty?
+        puts "#{type}:"
+        @changes[type].each { |obj| puts '  ' + obj }
+      end
     end
 
     results = []
