@@ -46,7 +46,7 @@ class Change < Reagan
   def files_from_override
     files = {}
     files['json'] = []
-    files['cookbooks'] = @@config['flags']['override_cookbooks'].split(',')
+    files['cookbooks'] = @@config['flags']['override_cookbooks']
     files
   end
 

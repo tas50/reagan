@@ -27,7 +27,7 @@ flags = { :pull => nil, :cookbooks => nil, :config => '/etc/reagan.yml' }
 parser = OptionParser.new do |opts|
   opts.banner = 'Usage: reagan [options]'
   opts.on('-o', '--override cb1,cb2', 'Comma separated list of cookbooks to test') do |cookbooks|
-    flags[:override_cookbooks] = cookbooks
+    flags[:override_cookbooks] = cookbooks.split(',')
   end
 
   opts.on('-p', '--pull_num 123', 'Github pull number to test') do |pull|
