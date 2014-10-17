@@ -69,9 +69,12 @@ class Reagan
       results << TestVersion.new(cookbook).test
       results <<  TestReagan.new(cookbook).test
     end
-    @changes['json'].each do |file|
-      pretty_print("Testing JSON file #{file}")
-      results <<  TestJSON.new(file).test
+
+    %w(data_bags roles environments).each do |type|
+      @changes[type].each do |file|
+        pretty_print("Testing #{type} file #{file}")
+        results <<  TestJSON.new(file).test
+      end
     end
 
     # print success or failure
