@@ -36,6 +36,7 @@ class TestReagan < Reagan
 
       status = true
       reagan_def['tests'].each do |test|
+        puts "  reagan_test.yml test: '#{test}'"
         result = system test
         status = false if result == false
       end
