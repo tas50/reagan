@@ -28,11 +28,11 @@ end
 class Change < Reagan
   attr_accessor :files
   def initialize
-    @files = files_to_test
+    @files = changed_files
   end
 
-  # return hash of json files / cookbooks that have been changed
-  def files_to_test
+  # return hash of chef objects that have been changed
+  def changed_files
     if @@config['flags']['override_cookbooks']
       files_from_override
     else
