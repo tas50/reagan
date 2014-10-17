@@ -54,4 +54,5 @@ class ReaganConfig
     @flags.each { |k, v| config['flags'][k.to_s] = v }
     config
   end
+
 end

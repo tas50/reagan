@@ -45,7 +45,7 @@ class Change < Reagan
   # build a files hash based on the override cookbooks passed by the user
   def files_from_override
     files = {}
-    files['json'] = []
+    %w(environments roles data_bags).each { |object| files[object] = {} }
     files['cookbooks'] = @@config['flags']['override_cookbooks']
     files
   end
@@ -81,8 +81,7 @@ class Change < Reagan
   # builds a hash of files / cookbooks that changed based on the pull data from GH
   def hash_builder(pull_files)
     files = {}
-    files['json'] = []
-    files['cookbooks'] = []
+    %w(environments roles data_bags cookbooks).each { |object| files[object] = {} }
     cookbooks = []
 
     pull_files.each do |file|

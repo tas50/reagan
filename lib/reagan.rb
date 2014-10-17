@@ -38,17 +38,29 @@ class Reagan
     puts "\n"
   end
 
-  # run tests on each changed cookbook
-  def run
-    # exit with a friendly message if nothing we test has been changed
-    if @changes['json'].empty? && @changes['cookbooks'].empty?
-      pretty_print('Nothing to test in this change. Reagan approves')
-      exit 0
+  # exit with a friendly message if nothing we test has been changed
+  def check_empty_update
+    objects_updated = false
+    %w(cookbooks roles environments data_bags).each do |object|
+      objects_updated = true unless @changes[object].empty?
     end
 
-    pretty_print('The following cookbooks & json files will be tested')
-    @changes['cookbooks'].each { |cb| puts cb }
-    @changes['json'].each { |json| puts json }
+    unless objects_updated
+      pretty_print('No objects to test. Exiting')
+      exit 0
+    end
+  end
+
+  # run tests on each changed cookbook
+  def run
+    check_empty_update
+
+    # print objects that will be tested
+    pretty_print('The following chef objects will be tested')
+    %w(cookbooks roles environments data_bags).each do |type|
+      puts "#{type}:"
+      @changes[type].each { |obj| puts '  ' + obj }
+    end
 
     results = []
     @changes['cookbooks'].each do |cookbook|

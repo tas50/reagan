@@ -22,7 +22,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'reagan'
 require 'optparse'
 
-flags = { :pull => nil, :cookbooks => nil, :config => '/etc/reagan.yml' }
+flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml' }
 
 parser = OptionParser.new do |opts|
   opts.banner = 'Usage: reagan [options]'
