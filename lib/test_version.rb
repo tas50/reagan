@@ -47,7 +47,12 @@ class  TestVersion < Reagan
           client_key: @@config['chef']['pem_path'],
           ssl: { verify: false }
         )
-      server_con.cookbook.all[@cookbook][0]
+      # return the version if the cookbook exists or return 0.0.0 if it's a new coobook not yet on the server
+      if server_con.cookbook.all[@cookbook]
+        server_con.cookbook.all[@cookbook][0]
+      else
+        '0.0.0'
+      end
     rescue Ridley::Errors::ConnectionFailed
       puts '    ERROR: Failed to connect to the Chef server. Cannot continue'
       exit 1
