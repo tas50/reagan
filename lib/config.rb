@@ -18,41 +18,69 @@
 
 begin
   require 'yaml'
+  require 'optparse'
 rescue LoadError => e
   raise "Missing gem or lib #{e}"
 end
 
-# builds a single config from passed flags, yaml config, and knife.rb
-class ReaganConfig
-  attr_accessor :settings
-  def initialize(flags)
-    @flags = flags
-    @config_file = load_config_file
-    @settings = build_config
-  end
+module Reagan
+  # builds a single config from passed flags, yaml config, and knife.rb
+  class Config
+    attr_accessor :settings
+    def initialize
+      @flags = flag_parser
+      @config_file = load_config_file
+      @settings = build_config
+    end
 
-  # loads the reagan.yml config file from /etc/reagan.yml or the passed location
-  def load_config_file
-    config = YAML.load_file(@flags[:config])
-    if config == false
-      puts "ERROR: Reagan config at #{@flags[:config]} does not contain any configuration data"
+    # grabs the flags passed in via command line
+    def flag_parser
+      flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml' }
+      OptionParser.new do |opts|
+        opts.banner = 'Usage: reagan [options]'
+        opts.on('-o', '--override cb1,cb2', 'Comma separated list of cookbooks to test') do |cookbooks|
+          flags[:override_cookbooks] = cookbooks.split(',')
+        end
+
+        opts.on('-p', '--pull_num 123', 'Github pull number to test') do |pull|
+          flags[:pull] = pull
+        end
+
+        opts.on('-c', '--config reagan.yml', 'Path to config file (defaults to /etc/reagan.yml)') do |config|
+          flags[:config] = config
+        end
+
+        opts.on('-h', '--help', 'Displays Help') do
+          puts opts
+          exit
+        end
+      end.parse!
+
+      flags
+    end
+
+    # loads the reagan.yml config file from /etc/reagan.yml or the passed location
+    def load_config_file
+      config = YAML.load_file(@flags[:config])
+      if config == false
+        puts "ERROR: Reagan config at #{@flags[:config]} does not contain any configuration data"
+        exit 1
+      end
+      config
+    rescue Errno::ENOENT
+      puts "ERROR: Cannot load Reagan config file at #{@flags[:config]}"
+      exit 1
+    rescue Psych::SyntaxError
+      puts "ERROR: Syntax error in Reagan config file at #{@flags[:config]}"
       exit 1
     end
-    config
-  rescue Errno::ENOENT
-    puts "ERROR: Cannot load Reagan config file at #{@flags[:config]}"
-    exit 1
-  rescue Psych::SyntaxError
-    puts "ERROR: Syntax error in Reagan config file at #{@flags[:config]}"
-    exit 1
-  end
 
-  # join the config file with the passed flags into a single object
-  def build_config
-    config = @config_file
-    config['flags'] = {}
-    @flags.each { |k, v| config['flags'][k.to_s] = v }
-    config
+    # join the config file with the passed flags into a single object
+    def build_config
+      config = @config_file
+      config['flags'] = {}
+      @flags.each { |k, v| config['flags'][k.to_s] = v }
+      config
+    end
   end
-
 end

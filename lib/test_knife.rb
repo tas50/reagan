@@ -16,20 +16,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# tests cookbooks using knife cookbook test functionality
-class TestKnife < Reagan
-  def initialize(cookbook)
-    @cookbook = cookbook
-  end
+module Reagan
+  # tests cookbooks using knife cookbook test functionality
+  class TestKnife < Application
+    def initialize(cookbook)
+      @config = Reagan::TestKnife.config
+      @cookbook = cookbook
+    end
 
-  # performs knife cookbook test
-  # returns  true if  cookbook passed or false if it failed
-  def test
-    # grab the version of the cookbook in the local metadata
-    result = system "knife cookbook test -o #{File.join(@@config['jenkins']['workspace_dir'], 'cookbooks')} #{@cookbook} > /dev/null 2>&1"
+    # performs knife cookbook test
+    # returns  true if  cookbook passed or false if it failed
+    def test
+      # grab the version of the cookbook in the local metadata
+      result = system "knife cookbook test -o #{File.join(@@config['jenkins']['workspace_dir'], 'cookbooks')} #{@cookbook} > /dev/null 2>&1"
 
-    puts 'Running knife cookbook test:'
-    puts result ? '    PASS: Knife cookbook test was successful' : '    FAIL: Knife cookbookk test was NOT successful'
-    result
+      puts 'Running knife cookbook test:'
+      puts result ? '    PASS: Knife cookbook test was successful' : '    FAIL: Knife cookbookk test was NOT successful'
+      result
+    end
   end
 end

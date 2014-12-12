@@ -19,31 +19,6 @@
 # load the libs
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'reagan'
-require 'optparse'
+require 'application'
 
-flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml' }
-
-parser = OptionParser.new do |opts|
-  opts.banner = 'Usage: reagan [options]'
-  opts.on('-o', '--override cb1,cb2', 'Comma separated list of cookbooks to test') do |cookbooks|
-    flags[:override_cookbooks] = cookbooks.split(',')
-  end
-
-  opts.on('-p', '--pull_num 123', 'Github pull number to test') do |pull|
-    flags[:pull] = pull
-  end
-
-  opts.on('-c', '--config reagan.yml', 'Path to config file (defaults to /etc/reagan.yml)') do |config|
-    flags[:config] = config
-  end
-
-  opts.on('-h', '--help', 'Displays Help') do
-    puts opts
-    exit
-  end
-end
-
-parser.parse!
-
-Reagan.new(flags).run
+Reagan::Application.new.run

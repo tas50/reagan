@@ -22,24 +22,27 @@ rescue LoadError => e
   raise "Missing gem or lib #{e}"
 end
 
-# tests to make sure the version has been updated on the cookbook
-class  TestJSON < Reagan
-  def initialize(file)
-    @file = file
-  end
-
-  # performs JSON format test
-  # returns  true if json can be parsed and false if it cannot
-  def test
-    puts "Running JSON parsing test:"
-    begin
-      json_file = File.read(File.join(@@config['jenkins']['workspace_dir'], @file))
-      JSON.parse(json_file)
-      success = true
-    rescue JSON::JSONError
-      success = false
+module Reagan
+  # tests to make sure the version has been updated on the cookbook
+  class  TestJSON < Application
+    def initialize(file)
+      @config = Reagan::TestJSON.config
+      @file = file
     end
-    puts success ? "    PASS: JSON parses" : "    FAIL: JSON does NOT parse"
-    success
+
+    # performs JSON format test
+    # returns  true if json can be parsed and false if it cannot
+    def test
+      puts 'Running JSON parsing test:'
+      begin
+        json_file = File.read(File.join(@config['jenkins']['workspace_dir'], @file))
+        JSON.parse(json_file)
+        success = true
+      rescue JSON::JSONError
+        success = false
+      end
+      puts success ? '    PASS: JSON parses' : '    FAIL: JSON does NOT parse'
+      success
+    end
   end
 end
