@@ -47,7 +47,18 @@ module Reagan
     def files_from_override
       files = {}
       %w(environments roles data_bags).each { |object| files[object] = {} }
-      files['cookbooks'] = @config['flags']['override_cookbooks']
+
+      # ensure that the passed cookbooks exist in the workspace first
+      cookbooks = []
+      @config['flags']['override_cookbooks'] .each do |cb|
+        if object_still_exists(::File.join('cookbooks/', cb))
+          cookbooks << cb
+        else
+          puts "Skipping override cookbook #{cb} as it does not exist in the workspace"
+        end
+      end
+
+      files['cookbooks'] = cookbooks
       files
     end
 
