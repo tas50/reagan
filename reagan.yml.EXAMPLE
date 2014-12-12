@@ -1,6 +1,7 @@
 github:
   auth_token: 1234abcde1234abcde
   repo: MyCo/chef-repo
+  api_endpoint: http://github.mycorp.dmz/api/v3 (This is optional for GH enterprise users)
 jenkins:
   workspace_dir: '/home/jenkins/workspace/chef-repo/'
 chef:
