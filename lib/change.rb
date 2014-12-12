@@ -77,6 +77,7 @@ module Reagan
 
     # queries github for the files that have changed
     def query_gh(pull_num)
+      Octokit.auto_paginate = true
       gh = Octokit::Client.new(:access_token => @config['github']['auth_token'])
       files_from_pull(gh.pull_request_files(@config ['github']['repo'], pull_num))
     end
