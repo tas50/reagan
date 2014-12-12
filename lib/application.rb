@@ -21,6 +21,10 @@ module Reagan
   class Application
     require 'config'
     require 'change'
+    require 'test_json'
+    require 'test_knife'
+    require 'test_reagan'
+    require 'test_version'
 
     attr_accessor :config
     def initialize
@@ -68,15 +72,15 @@ module Reagan
       results = []
       @changes['cookbooks'].each do |cookbook|
         pretty_print("Testing cookbook #{cookbook}")
-        #results <<  Reagan::TestKnife.new(cookbook).test
-        #results << Reagan::TestVersion.new(cookbook).test
-        #results <<  Reagan::TestReagan.new(cookbook).test
+        results <<  Reagan::TestKnife.new(cookbook).test
+        results << Reagan::TestVersion.new(cookbook).test
+        results <<  Reagan::TestReagan.new(cookbook).test
       end
 
       %w(data_bags roles environments).each do |type|
         @changes[type].each do |file|
           pretty_print("Testing #{type} file #{file}")
-          #results <<  TestJSON.new(file).test
+          results <<  TestJSON.new(file).test
         end
       end
 
