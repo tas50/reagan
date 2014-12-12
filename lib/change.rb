@@ -92,7 +92,7 @@ module Reagan
 
     # check to see if the file exists in the workspace so we don't test deleted objects
     def object_still_exists(file)
-      ::File.exist?(::File.join(@config['jenkins']['workspace_dir'],file))
+      ::File.exist?(::File.join(@config['jenkins']['workspace_dir'], file))
     end
 
     # builds a hash of files / cookbooks that changed based on the pull data from GH
@@ -105,7 +105,7 @@ module Reagan
         files['environments'] << file && next if file.match('^environments') && object_still_exists(file)
         files['roles'] << file && next if file.match('^roles') && object_still_exists(file)
         files['data_bags'] << file && next if file.match('^data_bags') && object_still_exists(file)
-        cookbooks << file.split('/')[1] if  file.match('^cookbooks') && object_still_exists(::File.join('cookbooks/', file.split('/')[1]))
+        cookbooks << file.split('/')[1] if file.match('^cookbooks') && object_still_exists(::File.join('cookbooks/', file.split('/')[1]))
       end
       # set cookbooks array to set to dedupe list of cookbooks
       files['cookbooks'] = cookbooks.to_set
