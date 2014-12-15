@@ -28,7 +28,8 @@ module Reagan
 
     attr_accessor :config
     def initialize
-      @@config = Reagan::Config.new.settings
+      @config_obj = Reagan::Config.new
+      @@config = @config_obj.settings
       @changes = Reagan::Change.new.files
     end
 
@@ -56,8 +57,18 @@ module Reagan
       end
     end
 
+    # check and see if the -p flag was passed and if so print the config hash
+    def check_print_config
+      if @config['flags']['print_config']
+        pretty_print('Current config file / CLI flag values')
+        @config_obj.print_config
+        exit 0
+      end
+    end
+
     # run tests on each changed cookbook
     def run
+      check_print_config
       check_empty_update
 
       # print objects that will be tested

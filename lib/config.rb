@@ -35,11 +35,15 @@ module Reagan
 
     # grabs the flags passed in via command line
     def flag_parser
-      flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml' }
+      flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml', :print_config => false }
       OptionParser.new do |opts|
         opts.banner = 'Usage: reagan [options]'
         opts.on('-o', '--override cb1,cb2', 'Comma separated list of cookbooks to test') do |cookbooks|
           flags[:override_cookbooks] = cookbooks.split(',')
+        end
+	
+        opts.on('-p', '--print', 'Print the config options that will be used') do |config|
+          flags[:print_config] = config
         end
 
         opts.on('-p', '--pull_num 123', 'Github pull number to test') do |pull|
@@ -81,6 +85,21 @@ module Reagan
       config['flags'] = {}
       @flags.each { |k, v| config['flags'][k.to_s] = v }
       config
+    end
+
+    # pretty print the config hash
+    def print_config(hash = nil, spaces = 0)
+      hash = @settings if hash.nil?
+      hash.each do |k, v|
+        spaces.times { print ' ' }
+        print k.to_s + ': '
+        if v.class == Hash
+          print "\n"
+          print_config(v, spaces + 2)
+        else
+          puts v
+        end
+      end
     end
   end
 end
