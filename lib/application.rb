@@ -26,7 +26,6 @@ module Reagan
     require 'test_reagan'
     require 'test_version'
 
-    attr_accessor :config
     def initialize
       @config_obj = Reagan::Config.new
       @@config = @config_obj.settings
@@ -59,11 +58,10 @@ module Reagan
 
     # check and see if the -p flag was passed and if so print the config hash
     def check_print_config
-      if @config['flags']['print_config']
-        pretty_print('Current config file / CLI flag values')
-        @config_obj.print_config
-        exit 0
-      end
+      return unless @@config['flags']['print_config']
+      pretty_print('Current config file / CLI flag values')
+      @config_obj.print_config
+      exit 0
     end
 
     # run tests on each changed cookbook
