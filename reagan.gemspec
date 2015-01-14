@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'reagan'
-  s.version     = '0.8.0'
+  s.version     = '0.8.1'
   s.date        = Date.today.to_s
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ['README.md', 'LICENSE']
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
   s.add_dependency 'octokit', '~> 3.0'
-  s.add_dependency 'chef', '~> 11.0'
+  s.add_dependency 'chef', '>= 11.0'
   s.add_dependency 'ridley', '~> 4.0'
   s.add_development_dependency 'rake', '~> 10.0'
 
