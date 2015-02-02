@@ -41,7 +41,7 @@ module Reagan
         opts.on('-o', '--override cb1,cb2', 'Comma separated list of cookbooks to test') do |cookbooks|
           flags[:override_cookbooks] = cookbooks.split(',')
         end
-	
+
         opts.on('-p', '--print', 'Print the config options that will be used') do |config|
           flags[:print_config] = config
         end
