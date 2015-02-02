@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'chef', '>= 11.0'
   s.add_dependency 'ridley', '~> 4.0'
   s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'rubocop', '~> 0.28.0'
 
   s.files         = `git ls-files -z`.split("\x0")
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
