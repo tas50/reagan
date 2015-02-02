@@ -39,3 +39,5 @@ Gemfile.lock
 # reagan related files
 config.yml
 
+# vi files
+*.swp
