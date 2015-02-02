@@ -13,7 +13,9 @@ HashSyntax:
 LineLength:
   Enabled: false
 MethodLength:
-  Max: 30
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
 NumericLiterals:
   Enabled: false
 SingleSpaceBeforeFirstArg:
