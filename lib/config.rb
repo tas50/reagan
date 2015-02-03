@@ -46,7 +46,7 @@ module Reagan
           flags[:print_config] = config
         end
 
-        opts.on('-p', '--pull_num 123', 'Github pull number to test') do |pull|
+        opts.on('-p', '--pull_num 123', Integer, 'Github pull number to test') do |pull|
           flags[:pull] = pull
         end
 
