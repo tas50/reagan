@@ -38,8 +38,8 @@ module Reagan
       flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml', :print_config => false }
       OptionParser.new do |opts|
         opts.banner = 'Usage: reagan [options]'
-        opts.on('-o', '--override cb1,cb2', 'Comma separated list of cookbooks to test') do |cookbooks|
-          flags[:override_cookbooks] = cookbooks.split(',')
+        opts.on('-o', '--override cb1,cb2', Array, 'Comma separated list of cookbooks to test') do |cookbooks|
+          flags[:override_cookbooks] = cookbooks
         end
 
         opts.on('-p', '--print', 'Print the config options that will be used') do |config|
