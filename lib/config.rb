@@ -70,6 +70,19 @@ module Reagan
         puts "ERROR: Reagan config at #{@flags[:config]} does not contain any configuration data"
         exit 1
       end
+
+      # if not workstation was set try to use the Jenkins workspace variable
+      unless config['jenkins'] && config['jenkins']['workspace_dir']
+        workspace = ENV['WORKSPACE']
+        if workspace
+          config['jenkins'] = {}
+          config['jenkins']['workspace_dir'] = workspace
+        else
+          puts 'Jenkins workspace not defined and $WORKSPACE empty. Exiting'
+          exit
+        end
+      end
+
       config
     rescue Errno::ENOENT
       puts "ERROR: Cannot load Reagan config file at #{@flags[:config]}"
