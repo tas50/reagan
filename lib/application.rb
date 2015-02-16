@@ -16,6 +16,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# extend class with a marquee print function
+class String
+  def marquee
+    puts "\n#{self}"
+    length.times { printf '-' }
+    puts "\n"
+  end
+end
+
 module Reagan
   # the main class for the reagan app.  gets called by the reagan bin
   class Application
@@ -36,13 +45,6 @@ module Reagan
       @@config
     end
 
-    # nicely prints marques
-    def pretty_print(string)
-      puts "\n#{string}"
-      string.length.times { printf '-' }
-      puts "\n"
-    end
-
     # exit with a friendly message if nothing we test has been changed
     def check_empty_update
       objects_updated = false
@@ -51,7 +53,7 @@ module Reagan
       end
 
       unless objects_updated
-        pretty_print('No objects to test. Exiting')
+        'No objects to test. Exiting'.marquee
         exit 0
       end
     end
@@ -59,7 +61,7 @@ module Reagan
     # check and see if the -p flag was passed and if so print the config hash
     def check_print_config
       return unless @@config['flags']['print_config']
-      pretty_print('Current config file / CLI flag values')
+      'Current config file / CLI flag values'.marquee
       @config_obj.print_config
       exit 0
     end
@@ -70,7 +72,7 @@ module Reagan
       check_empty_update
 
       # print objects that will be tested
-      pretty_print('The following chef objects will be tested')
+      'The following chef objects will be tested'.marquee
       %w(cookbooks roles environments data_bags).each do |type|
         unless @changes[type].empty?
           puts "#{type}:"
@@ -80,7 +82,7 @@ module Reagan
 
       results = []
       @changes['cookbooks'].each do |cookbook|
-        pretty_print("Testing cookbook #{cookbook}")
+        "Testing cookbook #{cookbook}".marquee
         results <<  Reagan::TestKnife.new(cookbook).test
         results << Reagan::TestVersion.new(cookbook).test
         results <<  Reagan::TestReagan.new(cookbook).test
@@ -88,7 +90,7 @@ module Reagan
 
       %w(data_bags roles environments).each do |type|
         @changes[type].each do |file|
-          pretty_print("Testing #{type} file #{file}")
+          "Testing #{type} file #{file}".marquee
           results <<  TestJSON.new(file).test
         end
       end
@@ -96,7 +98,7 @@ module Reagan
       # print success or failure
       failure = results.include?(false)
       text = failure ? 'Reagan testing has failed' : 'All Reagan tests have suceeded'
-      pretty_print(text)
+      text.marquee
 
       # if any test failed then exit 1 so jenkins can pick up the failure
       exit 1 if failure
