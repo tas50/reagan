@@ -78,7 +78,7 @@ module Reagan
           config['jenkins'] = {}
           config['jenkins']['workspace_dir'] = workspace
         else
-          puts 'Jenkins workspace not defined and $WORKSPACE empty. Exiting'
+          puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'
           exit
         end
       end
