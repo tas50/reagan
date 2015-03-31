@@ -71,7 +71,7 @@ module Reagan
         exit 1
       end
 
-      # if not workstation was set try to use the Jenkins workspace variable
+      # if workstation not defined in the config file try to use the Jenkins workspace variable
       unless config['jenkins'] && config['jenkins']['workspace_dir']
         workspace = ENV['WORKSPACE']
         if workspace
