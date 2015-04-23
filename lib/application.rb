@@ -1,7 +1,7 @@
 # encoding: UTF-8
 #
 # Author:: Tim Smith (<tim@cozy.co>)
-# Copyright:: Copyright (c) 2014 Tim Smith
+# Copyright:: Copyright (c) 2014-2015 Tim Smith
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,15 +83,15 @@ module Reagan
       results = []
       @changes['cookbooks'].each do |cookbook|
         "Testing cookbook #{cookbook}".marquee
-        results <<  Reagan::TestKnife.new(cookbook).test
+        results << Reagan::TestKnife.new(cookbook).test
         results << Reagan::TestVersion.new(cookbook).test
-        results <<  Reagan::TestReagan.new(cookbook).test
+        results << Reagan::TestReagan.new(cookbook).test
       end
 
       %w(data_bags roles environments).each do |type|
         @changes[type].each do |file|
           "Testing #{type} file #{file}".marquee
-          results <<  TestJSON.new(file).test
+          results << TestJSON.new(file).test
         end
       end
 
