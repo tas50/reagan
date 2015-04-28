@@ -17,7 +17,6 @@
 # limitations under the License.
 
 begin
-  require 'rubygems'
   require 'ridley'
   require 'chef/cookbook/metadata'
 rescue LoadError => e
@@ -26,16 +25,15 @@ end
 
 module Reagan
   # tests to make sure the version has been updated on the cookbook
-  class  TestVersion < Application
+  class TestVersion
     def initialize(cookbook)
-      @config = Reagan::TestVersion.config
       @cookbook = cookbook
     end
 
     # grab the version of the cookbook in the local metadata
     def check_commit_version
       metadata = Chef::Cookbook::Metadata.new
-      metadata.from_file(File.join(@config['jenkins']['workspace_dir'], 'cookbooks', @cookbook, 'metadata.rb'))
+      metadata.from_file(File.join(Config.settings['jenkins']['workspace_dir'], 'cookbooks', @cookbook, 'metadata.rb'))
       metadata.version
     end
 
@@ -44,11 +42,11 @@ module Reagan
       Ridley::Logging.logger.level = Logger.const_get 'ERROR'
       begin
         server_con = Ridley.new(
-            server_url: @config['chef']['server_url'],
-            client_name: @config['chef']['client_name'],
-            client_key: @config['chef']['pem_path'],
-            ssl: { verify: false }
-          )
+          server_url: Config.settings['chef']['server_url'],
+          client_name: Config.settings['chef']['client_name'],
+          client_key: Config.settings['chef']['pem_path'],
+          ssl: { verify: false }
+        )
         # return the version if the cookbook exists or return 0.0.0 if it's a new coobook not yet on the server
         if server_con.cookbook.all[@cookbook]
           server_con.cookbook.all[@cookbook][0]

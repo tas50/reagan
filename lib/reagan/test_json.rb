@@ -16,23 +16,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+begin
+  require 'json'
+rescue LoadError => e
+  raise "Missing gem or lib #{e}"
+end
+
 module Reagan
-  # tests cookbooks using knife cookbook test functionality
-  class TestKnife < Application
-    def initialize(cookbook)
-      @config = Reagan::TestKnife.config
-      @cookbook = cookbook
+  # tests to make sure the version has been updated on the cookbook
+  class TestJSON
+    def initialize(file)
+      @file = file
     end
 
-    # performs knife cookbook test
-    # returns  true if  cookbook passed or false if it failed
+    # performs JSON format test
+    # returns  true if json can be parsed and false if it cannot
     def test
-      # grab the version of the cookbook in the local metadata
-      result = system "knife cookbook test -o #{File.join(@@config['jenkins']['workspace_dir'], 'cookbooks')} #{@cookbook} > /dev/null 2>&1"
-
-      puts 'Running knife cookbook test:'
-      puts result ? '    PASS: Knife cookbook test was successful' : '    FAIL: Knife cookbookk test was NOT successful'
-      result
+      puts 'Running JSON parsing test:'
+      begin
+        json_file = File.read(File.join(Config.settings['jenkins']['workspace_dir'], @file))
+        JSON.parse(json_file)
+        success = true
+      rescue JSON::JSONError
+        success = false
+      end
+      puts success ? '    PASS: JSON parses' : '    FAIL: JSON does NOT parse'
+      success
     end
   end
 end

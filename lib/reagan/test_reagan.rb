@@ -18,9 +18,8 @@
 
 module Reagan
   # tests cookbooks using tests defined in reagan_test.yml files
-  class TestReagan < Application
+  class TestReagan
     def initialize(cookbook)
-      @config = Reagan::TestReagan.config
       @cookbook = cookbook
     end
 
@@ -28,13 +27,13 @@ module Reagan
     def test
       puts 'Running reagan_test.yml defined tests:'
       # check to see if a reagan_test.yml file exists
-      if File.exist?(File.join(@config['jenkins']['workspace_dir'], 'cookbooks', @cookbook, 'reagan_test.yml'))
+      if File.exist?(File.join(Config.settings['jenkins']['workspace_dir'], 'cookbooks', @cookbook, 'reagan_test.yml'))
 
         # load the reagan config file
-        reagan_def = YAML.load_file(File.join(@config['jenkins']['workspace_dir'], 'cookbooks', @cookbook, 'reagan_test.yml'))
+        reagan_def = YAML.load_file(File.join(Config.settings['jenkins']['workspace_dir'], 'cookbooks', @cookbook, 'reagan_test.yml'))
 
         # change into the cookbook dir so rake tests run locally
-        Dir.chdir(File.join(@config['jenkins']['workspace_dir'], 'cookbooks', @cookbook))
+        Dir.chdir(File.join(Config.settings['jenkins']['workspace_dir'], 'cookbooks', @cookbook))
 
         status = true
         reagan_def['tests'].each do |test|

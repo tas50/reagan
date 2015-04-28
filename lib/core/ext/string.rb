@@ -1,8 +1,7 @@
-#!/usr/bin/env ruby
 # encoding: UTF-8
 #
 # Author:: Tim Smith (<tim@cozy.co>)
-# Copyright:: Copyright (c) 2015 Tim Smith
+# Copyright:: Copyright (c) 2014-2015 Tim Smith
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# load the libs
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-
-require 'reagan'
-
-Reagan.run
+# add a simple method for making marquees
+class String
+  def marquee
+    puts "\n#{self}"
+    length.times { printf '-' }
+    puts "\n"
+  end
+end

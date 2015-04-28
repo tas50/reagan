@@ -26,16 +26,32 @@ end
 module Reagan
   # builds a single config from passed flags, yaml config, and knife.rb
   class Config
-    attr_accessor :settings
-    def initialize
-      @flags = flag_parser
-      @config_file = load_config_file
-      @settings = build_config
+    # lazy load config settings
+    def self::settings
+      @cli_flags ||= cli_flags
+      @config_file ||= config_file
+      @settings ||= build_config
+      @settings
+    end
+
+    # pretty print the config hash
+    def self::print(hash = nil, spaces = 0)
+      hash = @settings if hash.nil?
+      hash.each do |k, v|
+        spaces.times { print ' ' }
+        print k.to_s + ': '
+        if v.class == Hash
+          print "\n"
+          print(v, spaces + 2)
+        else
+          puts v
+        end
+      end
     end
 
     # grabs the flags passed in via command line
-    def flag_parser
-      flags = { :pull => nil, :override_cookbooks => nil, :config => '/etc/reagan.yml', :print_config => false }
+    def self::cli_flags
+      flags = { pull: nil, override_cookbooks: nil, config: '/etc/reagan.yml', print_config: false }
       OptionParser.new do |opts|
         opts.banner = 'Usage: reagan [options]'
         opts.on('-o', '--override cb1,cb2', Array, 'Comma separated list of cookbooks to test') do |cookbooks|
@@ -64,55 +80,45 @@ module Reagan
     end
 
     # loads the reagan.yml config file from /etc/reagan.yml or the passed location
-    def load_config_file
-      config = YAML.load_file(@flags[:config])
-      if config == false
-        puts "ERROR: Reagan config at #{@flags[:config]} does not contain any configuration data"
+    def self::config_file
+      config = YAML.load_file(@cli_flags[:config])
+      validate_config(config)
+
+      config
+      rescue Errno::ENOENT
+        puts "ERROR: Cannot load Reagan config file at #{@cli_flags[:config]}"
+        exit 1
+      rescue Psych::SyntaxError
+        puts "ERROR: Syntax error in Reagan config file at #{@cli_flags[:config]}"
+        exit 1
+    end
+
+    # make sure the config was properly loaded and contains the various keys we need
+    def self::validate_config(loaded_file)
+      if loaded_file == false
+        puts "ERROR: Reagan config at #{@cli_flags[:config]} does not contain any configuration data"
         exit 1
       end
 
       # if workstation not defined in the config file try to use the Jenkins workspace variable
-      unless config['jenkins'] && config['jenkins']['workspace_dir']
+      unless loaded_file['jenkins'] && loaded_file['jenkins']['workspace_dir']
         workspace = ENV['WORKSPACE']
         if workspace
-          config['jenkins'] = {}
-          config['jenkins']['workspace_dir'] = workspace
+          loaded_file['jenkins'] = {}
+          loaded_file['jenkins']['workspace_dir'] = workspace
         else
           puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'
           exit
         end
       end
-
-      config
-    rescue Errno::ENOENT
-      puts "ERROR: Cannot load Reagan config file at #{@flags[:config]}"
-      exit 1
-    rescue Psych::SyntaxError
-      puts "ERROR: Syntax error in Reagan config file at #{@flags[:config]}"
-      exit 1
     end
 
     # join the config file with the passed flags into a single object
-    def build_config
+    def self::build_config
       config = @config_file
       config['flags'] = {}
-      @flags.each { |k, v| config['flags'][k.to_s] = v }
+      @cli_flags.each { |k, v| config['flags'][k.to_s] = v }
       config
-    end
-
-    # pretty print the config hash
-    def print_config(hash = nil, spaces = 0)
-      hash = @settings if hash.nil?
-      hash.each do |k, v|
-        spaces.times { print ' ' }
-        print k.to_s + ': '
-        if v.class == Hash
-          print "\n"
-          print_config(v, spaces + 2)
-        else
-          puts v
-        end
-      end
     end
   end
 end

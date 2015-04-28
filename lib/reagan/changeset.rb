@@ -17,7 +17,6 @@
 # limitations under the License.
 
 begin
-  require 'rubygems'
   require 'octokit'
 rescue LoadError => e
   raise "Missing gem or lib #{e}"
@@ -25,16 +24,14 @@ end
 
 module Reagan
   # determines changed files in the commit
-  class Change < Application
-    attr_accessor :files
-    def initialize
-      @config = Reagan::Change.config
-      @files = changed_files
+  class ChangeSet
+    def self::files
+      @files ||= changed_files
     end
 
     # return hash of chef objects that have been changed
-    def changed_files
-      if @config['flags']['override_cookbooks']
+    def self::changed_files
+      if Config.settings['flags']['override_cookbooks']
         files_from_override
       else
         pull = pull_num
@@ -44,13 +41,13 @@ module Reagan
     end
 
     # build a files hash based on the override cookbooks passed by the user
-    def files_from_override
+    def self::files_from_override
       files = {}
       %w(environments roles data_bags).each { |object| files[object] = {} }
 
       # ensure that the passed cookbooks exist in the workspace first
       cookbooks = []
-      @config['flags']['override_cookbooks'] .each do |cb|
+      Config.settings['flags']['override_cookbooks'] .each do |cb|
         if object_still_exists(::File.join('cookbooks/', cb))
           cookbooks << cb
         else
@@ -63,9 +60,9 @@ module Reagan
     end
 
     # fetch pull num from either ENV or CLI param
-    def pull_num
-      if @config['flags']['pull']
-        pull = @config['flags']['pull']
+    def self::pull_num
+      if Config.settings['flags']['pull']
+        pull = Config.settings['flags']['pull']
       elsif ENV['ghprbPullId']
         pull = ENV['ghprbPullId']
       else
@@ -76,15 +73,18 @@ module Reagan
     end
 
     # queries github for the files that have changed
-    def query_gh(pull_num)
+    def self::query_gh(pull_num)
       Octokit.auto_paginate = true # avoids issues with large commits
-      Octokit.api_endpoint = @config['github']['api_endpoint'] || 'https://api.github.com'
-      gh = Octokit::Client.new(:access_token => @config['github']['auth_token'])
-      files_from_pull(gh.pull_request_files(@config ['github']['repo'], pull_num))
+      Octokit.api_endpoint = Config.settings['github']['api_endpoint'] || 'https://api.github.com'
+      gh = Octokit::Client.new(access_token: Config.settings['github']['auth_token'])
+      files_from_pull(gh.pull_request_files(Config.settings['github']['repo'], pull_num))
+      rescue
+        puts 'Failed to query pull request contents from Github. Check the api_endpoint, repo, and token.'
+        exit 1
     end
 
     # convert pull request response to array of changed files
-    def files_from_pull(pull_changes)
+    def self::files_from_pull(pull_changes)
       files = []
       pull_changes.each do |file|
         files << file[:filename]
@@ -93,12 +93,12 @@ module Reagan
     end
 
     # check to see if the file exists in the workspace so we don't test deleted objects
-    def object_still_exists(file)
-      ::File.exist?(::File.join(@config['jenkins']['workspace_dir'], file))
+    def self::object_still_exists(file)
+      ::File.exist?(::File.join(Config.settings['jenkins']['workspace_dir'], file))
     end
 
     # builds a hash of files / cookbooks that changed based on the pull data from GH
-    def hash_builder(pull_files)
+    def self::hash_builder(pull_files)
       files = {}
       %w(environments roles data_bags cookbooks).each { |object| files[object] = [] }
       cookbooks = []
