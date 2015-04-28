@@ -79,7 +79,7 @@ module Reagan
     # print success or failure
     failure = results.include?(false)
     text = failure ? 'Reagan testing has failed' : 'All Reagan tests have suceeded'
-    text.marquee
+    text.to_red.marquee
 
     # if any test failed then exit 1 so jenkins can pick up the failure
     exit 1 if failure

@@ -54,7 +54,7 @@ module Reagan
           '0.0.0'
         end
       rescue Ridley::Errors::ConnectionFailed
-        puts '    ERROR: Failed to connect to the Chef server. Cannot continue'
+        puts '    ERROR: Failed to connect to the Chef server. Cannot continue'.to_red
         exit 1
       end
     end

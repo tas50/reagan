@@ -89,14 +89,14 @@ module Reagan
         puts "ERROR: Cannot load Reagan config file at #{@cli_flags[:config]}"
         exit 1
       rescue Psych::SyntaxError
-        puts "ERROR: Syntax error in Reagan config file at #{@cli_flags[:config]}"
+        puts "ERROR: Syntax error in Reagan config file at #{@cli_flags[:config]}".to_red
         exit 1
     end
 
     # make sure the config was properly loaded and contains the various keys we need
     def self::validate_config(loaded_file)
       if loaded_file == false
-        puts "ERROR: Reagan config at #{@cli_flags[:config]} does not contain any configuration data"
+        puts "ERROR: Reagan config at #{@cli_flags[:config]} does not contain any configuration data".to_red
         exit 1
       end
 
@@ -107,7 +107,7 @@ module Reagan
           loaded_file['jenkins'] = {}
           loaded_file['jenkins']['workspace_dir'] = workspace
         else
-          puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'
+          puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'.to_red
           exit
         end
       end
