@@ -28,10 +28,7 @@ module Reagan
   class Config
     # lazy load config settings
     def self::settings
-      @cli_flags ||= cli_flags
-      @config_file ||= config_file
       @settings ||= build_config
-      @settings
     end
 
     # pretty print the config hash
@@ -115,6 +112,8 @@ module Reagan
 
     # join the config file with the passed flags into a single object
     def self::build_config
+      @cli_flags = cli_flags
+      @config_file = config_file
       config = @config_file
       config['flags'] = {}
       @cli_flags.each { |k, v| config['flags'][k.to_s] = v }
