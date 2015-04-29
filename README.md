@@ -30,12 +30,11 @@ While this app is written to be run as a Jenkins job it can also be run locally.
 ```ruby
 source 'https://rubygems.org'
 
-gem 'chef', '~> 11.0'
-gem 'berkshelf', '~> 3.2'
+gem 'chef', '~> 12.3'
 
 group :test do
-  gem 'reagan', '~> 0.6'
-  gem 'rubocop', '~> 0.27'
+  gem 'reagan', '~> 0.8'
+  gem 'rubocop', '~> 0.30'
   gem 'foodcritic', '~> 4.0'
 end
 ```
