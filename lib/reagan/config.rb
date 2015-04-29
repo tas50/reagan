@@ -32,14 +32,14 @@ module Reagan
     end
 
     # pretty print the config hash
-    def self::print(hash = nil, spaces = 0)
+    def self::pretty_print(hash = nil, spaces = 0)
       hash = @settings if hash.nil?
       hash.each do |k, v|
         spaces.times { print ' ' }
         print k.to_s + ': '
         if v.class == Hash
           print "\n"
-          print(v, spaces + 2)
+          pretty_print(v, spaces + 2)
         else
           puts v
         end

@@ -43,7 +43,7 @@ module Reagan
   def self::check_print_config
     return unless Config.settings['flags']['print_config']
     'Current config file / CLI flag values'.marquee
-    Config.settings.print
+    Config.pretty_print
     exit 0
   end
 
