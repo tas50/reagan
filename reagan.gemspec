@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'reagan'
-  s.version     = '0.8.2'
+  s.version     = '1.0.0'
   s.date        = Date.today.to_s
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ['README.md', 'LICENSE']
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'chef', '>= 11.0'
   s.add_dependency 'ridley', '~> 4.0'
   s.add_development_dependency 'rake', '~> 10.0'
-  s.add_development_dependency 'rubocop', '~> 0.30.0'
+  s.add_development_dependency 'rubocop', '~> 0.30.1'
 
   s.files         = `git ls-files -z`.split("\x0")
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
