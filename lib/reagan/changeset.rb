@@ -40,6 +40,16 @@ module Reagan
       end
     end
 
+    # check if the changeset is empty
+    def self::empty?
+      objects_updated = false
+      %w(cookbooks roles environments data_bags).each do |object|
+        objects_updated = true unless files[object].empty?
+        puts files
+      end
+      !objects_updated
+    end
+
     # build a files hash based on the override cookbooks passed by the user
     def self::files_from_override
       files = {}

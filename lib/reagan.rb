@@ -28,12 +28,7 @@ module Reagan
 
   # exit with a friendly message if nothing we test has been changed
   def self::check_empty_update
-    objects_updated = false
-    %w(cookbooks roles environments data_bags).each do |object|
-      objects_updated = true unless ChangeSet.files[object].empty?
-    end
-
-    unless objects_updated
+    if ChangeSet.empty?
       'No objects to test. Exiting'.marquee
       exit 0
     end
