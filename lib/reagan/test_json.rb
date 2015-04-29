@@ -16,11 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-begin
-  require 'json'
-rescue LoadError => e
-  raise "Missing gem or lib #{e}"
-end
+require 'json'
 
 module Reagan
   # tests to make sure the version has been updated on the cookbook
