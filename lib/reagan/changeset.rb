@@ -45,7 +45,6 @@ module Reagan
       objects_updated = false
       %w(cookbooks roles environments data_bags).each do |object|
         objects_updated = true unless files[object].empty?
-        puts files
       end
       !objects_updated
     end
