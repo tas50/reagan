@@ -41,10 +41,10 @@ module Reagan
           result = system test
           status = false if result == false
         end
-        puts status ? '    PASS: reagan_test.yml test was successful' : '    FAIL: reagan_test.yml test was NOT successful'
+        puts status ? 'PASS: reagan_test.yml test was successful' : '    FAIL: reagan_test.yml test was NOT successful'.indent
         status
       else
-        puts '    SKIP: No reagan_test.yml file found in the cookbook path. Skipping test'
+        puts 'SKIP: No reagan_test.yml file found in the cookbook path. Skipping test'.indent
         status
       end
     end

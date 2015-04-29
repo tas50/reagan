@@ -27,4 +27,9 @@ class String
   def to_red
     "\033[31m#{self}\033[0m"
   end
+
+  def indent(double_space_count = 1)
+    double_space_count.times { insert(0, '  ') }
+    self
+  end
 end

@@ -67,9 +67,9 @@ module Reagan
       updated = Gem::Version.new(serv_v) < Gem::Version.new(commit_v) ? true : false
 
       puts "Running cookbook version rev'd test:"
-      puts "    Server version: #{serv_v}"
-      puts "    Commit version: #{commit_v}"
-      puts updated ? "    PASS: Metadata version has been rev'd" : "    FAIL: Metadata version has NOT been rev'd"
+      puts "Server version: #{serv_v}".indent
+      puts "Commit version: #{commit_v}".indent
+      puts updated ? "PASS: Metadata version has been rev'd".indent : "FAIL: Metadata version has NOT been rev'd".indent
       updated
     end
   end
