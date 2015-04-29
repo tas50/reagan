@@ -84,7 +84,6 @@ module Reagan
     # loads the reagan.yml config file from /etc/reagan.yml or the passed location
     def self::config_file
       config = YAML.load_file(cli_flags['config'])
-      validate_config(config)
 
       config
       rescue Errno::ENOENT
@@ -96,18 +95,26 @@ module Reagan
     end
 
     # make sure the config was properly loaded and contains the various keys we need
-    def self::validate_config(loaded_file)
-      if loaded_file == false
+    def self::validate
+      settings = Config.Settings
+
+      if settings == false
         puts "ERROR: Reagan config at #{cli_flags['config']} does not contain any configuration data".to_red
         exit 1
       end
 
+      # make sure a pull request is specified
+      unless settings['flags']['pull']
+        puts 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'
+        exit 1
+      end
+
       # if workstation not defined in the config file try to use the Jenkins workspace variable
-      unless loaded_file['jenkins'] && loaded_file['jenkins']['workspace_dir']
+      unless settings['jenkins'] && loaded_file['jenkins']['workspace_dir']
         workspace = ENV['WORKSPACE']
         if workspace
-          loaded_file['jenkins'] = {}
-          loaded_file['jenkins']['workspace_dir'] = workspace
+          settings['jenkins'] = {}
+          settings['jenkins']['workspace_dir'] = workspace
         else
           puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'.to_red
           exit
