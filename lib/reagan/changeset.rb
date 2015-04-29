@@ -57,7 +57,7 @@ module Reagan
 
       # ensure that the passed cookbooks exist in the workspace first
       cookbooks = []
-      Config.settings['flags']['override_cookbooks'] .each do |cb|
+      Config.settings['flags']['override_cookbooks'].each do |cb|
         if object_still_exists(::File.join('cookbooks/', cb))
           cookbooks << cb
         else
