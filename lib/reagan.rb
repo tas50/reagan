@@ -44,6 +44,9 @@ module Reagan
 
   # run tests on each changed cookbook
   def self::run
+    # ensure output syncs to the console so jenkins can record it
+    $stdout.sync = $stderr.sync = true
+
     check_print_config
     check_empty_update
 
