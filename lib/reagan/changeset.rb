@@ -34,7 +34,7 @@ module Reagan
       if Config.settings['flags']['override_cookbooks']
         files_from_override
       else
-        pull = pull_num
+        pull = Config.settings['flags']['pull']
         puts "Grabbing contents of pull request #{pull}\n"
         hash_builder(query_gh(pull))
       end
@@ -57,19 +57,6 @@ module Reagan
 
       files['cookbooks'] = cookbooks
       files
-    end
-
-    # fetch pull num from either ENV or CLI param
-    def self::pull_num
-      if Config.settings['flags']['pull']
-        pull = Config.settings['flags']['pull']
-      elsif ENV['ghprbPullId']
-        pull = ENV['ghprbPullId']
-      else
-        puts 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'
-        exit 1
-      end
-      pull
     end
 
     # queries github for the files that have changed

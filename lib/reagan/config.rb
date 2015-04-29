@@ -120,7 +120,12 @@ module Reagan
       config = config_file
       config['flags'] = {}
       config['flags'].merge!(cli_flags)
-      puts config
+
+      # if no pull request provided at the CLI use the Jenkins environmental variable
+      unless config['flags']['pull']
+        config['flags']['pull'] = ENV['ghprbPullId']
+      end
+
       config
     end
   end
