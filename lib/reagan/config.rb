@@ -28,7 +28,7 @@ module Reagan
   class Config
     # lazy load config settings
     def self::settings
-      @settings ||= build_config
+      @settings ||= merge_config
     end
 
     # pretty print the config hash
@@ -48,52 +48,57 @@ module Reagan
 
     # grabs the flags passed in via command line
     def self::cli_flags
-      flags = { pull: nil, override_cookbooks: nil, config: '/etc/reagan.yml', print_config: false }
-      OptionParser.new do |opts|
-        opts.banner = 'Usage: reagan [options]'
-        opts.on('-o', '--override cb1,cb2', Array, 'Comma separated list of cookbooks to test') do |cookbooks|
-          flags[:override_cookbooks] = cookbooks
-        end
+      if @cli_flags
+        @cli_flags
+      else
+        flags = { 'config' => '/etc/reagan.yml' }
+        OptionParser.new do |opts|
+          opts.banner = 'Usage: reagan [options]'
+          opts.on('-o', '--override cb1,cb2', Array, 'Comma separated list of cookbooks to test') do |cookbooks|
+            flags[:override_cookbooks] = cookbooks
+          end
 
-        opts.on('-p', '--print', 'Print the config options that will be used') do |config|
-          flags[:print_config] = config
-        end
+          opts.on('-p', '--print', 'Print the config options that will be used') do |config|
+            flags['print_config'] = config
+          end
 
-        opts.on('-p', '--pull_num 123', Integer, 'Github pull number to test') do |pull|
-          flags[:pull] = pull
-        end
+          opts.on('-p', '--pull_num 123', Integer, 'Github pull number to test') do |pull|
+            flags['pull'] = pull
+          end
 
-        opts.on('-c', '--config reagan.yml', 'Path to config file (defaults to /etc/reagan.yml)') do |config|
-          flags[:config] = config
-        end
+          opts.on('-c', '--config reagan.yml', 'Path to config file (defaults to /etc/reagan.yml)') do |config|
+            flags['config'] = config
+          end
 
-        opts.on('-h', '--help', 'Displays Help') do
-          puts opts
-          exit
-        end
-      end.parse!
+          opts.on('-h', '--help', 'Displays Help') do
+            puts opts
+            exit
+          end
+        end.parse!
 
-      flags
+        @cli_flags = flags
+        flags
+      end
     end
 
     # loads the reagan.yml config file from /etc/reagan.yml or the passed location
     def self::config_file
-      config = YAML.load_file(@cli_flags[:config])
+      config = YAML.load_file(cli_flags['config'])
       validate_config(config)
 
       config
       rescue Errno::ENOENT
-        puts "ERROR: Cannot load Reagan config file at #{@cli_flags[:config]}"
+        puts "ERROR: Cannot load Reagan config file at #{cli_flags['config']}".to_red
         exit 1
       rescue Psych::SyntaxError
-        puts "ERROR: Syntax error in Reagan config file at #{@cli_flags[:config]}".to_red
+        puts "ERROR: Syntax error in Reagan config file at #{cli_flags['config']}".to_red
         exit 1
     end
 
     # make sure the config was properly loaded and contains the various keys we need
     def self::validate_config(loaded_file)
       if loaded_file == false
-        puts "ERROR: Reagan config at #{@cli_flags[:config]} does not contain any configuration data".to_red
+        puts "ERROR: Reagan config at #{cli_flags['config']} does not contain any configuration data".to_red
         exit 1
       end
 
@@ -111,12 +116,11 @@ module Reagan
     end
 
     # join the config file with the passed flags into a single object
-    def self::build_config
-      @cli_flags = cli_flags
-      @config_file = config_file
-      config = @config_file
+    def self::merge_config
+      config = config_file
       config['flags'] = {}
-      @cli_flags.each { |k, v| config['flags'][k.to_s] = v }
+      config['flags'].merge!(cli_flags)
+      puts config
       config
     end
   end
