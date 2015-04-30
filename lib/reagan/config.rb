@@ -105,7 +105,7 @@ module Reagan
 
       # make sure a pull request is specified
       unless settings['flags']['pull']
-        puts 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'
+        puts 'Jenkins ghprbPullId environmental variable not set or --pull option not used.  Cannot continue'.to_red
         exit 1
       end
 

@@ -69,7 +69,7 @@ module Reagan
       puts "Running cookbook version rev'd test:"
       puts "Server version: #{serv_v}".indent
       puts "Commit version: #{commit_v}".indent
-      puts updated ? "PASS: Metadata version has been rev'd".indent : "FAIL: Metadata version has NOT been rev'd".indent
+      puts updated ? "PASS: Metadata version has been rev'd".indent : "FAIL: Metadata version has NOT been rev'd".indent.to_red
       updated
     end
   end

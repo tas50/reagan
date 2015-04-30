@@ -36,7 +36,7 @@ module Reagan
       rescue JSON::JSONError
         success = false
       end
-      puts success ? 'PASS: JSON parses'.indent : 'FAIL: JSON does NOT parse'.indent
+      puts success ? 'PASS: JSON parses'.indent : 'FAIL: JSON does NOT parse'.indent.to_red
       success
     end
   end

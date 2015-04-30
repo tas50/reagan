@@ -30,7 +30,7 @@ module Reagan
       result = system "knife cookbook test -o #{File.join(Config.settings['jenkins']['workspace_dir'], 'cookbooks')} #{@cookbook} > /dev/null 2>&1"
 
       puts 'Running knife cookbook test:'
-      puts result ? 'PASS: Knife cookbook test was successful'.indent : 'FAIL: Knife cookbookk test was NOT successful'.indent
+      puts result ? 'PASS: Knife cookbook test was successful'.indent : 'FAIL: Knife cookbookk test was NOT successful'.indent.to_red
       result
     end
   end
