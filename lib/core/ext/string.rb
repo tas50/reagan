@@ -24,6 +24,10 @@ class String
     puts "\n"
   end
 
+  def to_green
+    "\033[32m#{self}\033[0m"
+  end
+
   def to_red
     "\033[31m#{self}\033[0m"
   end
