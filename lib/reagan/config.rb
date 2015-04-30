@@ -96,7 +96,7 @@ module Reagan
 
     # make sure the config was properly loaded and contains the various keys we need
     def self::validate
-      settings = Config.Settings
+      settings = Config.settings
 
       if settings == false
         puts "ERROR: Reagan config at #{cli_flags['config']} does not contain any configuration data".to_red
@@ -109,16 +109,10 @@ module Reagan
         exit 1
       end
 
-      # if workstation not defined in the config file try to use the Jenkins workspace variable
-      unless settings['jenkins'] && loaded_file['jenkins']['workspace_dir']
-        workspace = ENV['WORKSPACE']
-        if workspace
-          settings['jenkins'] = {}
-          settings['jenkins']['workspace_dir'] = workspace
-        else
-          puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'.to_red
-          exit
-        end
+      # make sure either jenkins gave us a workspace variable or its defined in the config
+      unless ENV['WORKSPACE'] || (settings['jenkins'] && settings['jenkins']['workspace_dir'])
+        puts 'Jenkins workspace_dir not defined in the config file and $WORKSPACE env variable empty. Exiting'.to_red
+        exit 1
       end
     end
 
@@ -131,6 +125,12 @@ module Reagan
       # if no pull request provided at the CLI use the Jenkins environmental variable
       unless config['flags']['pull']
         config['flags']['pull'] = ENV['ghprbPullId']
+      end
+
+      # merge in the jenkins workspace variable on top of the config file
+      if ENV['WORKSPACE']
+        config['jenkins'] = {} unless config['jenkins'] # create the higher level hash if it doesn't exist
+        config['jenkins']['workspace_dir'] = ENV['WORKSPACE']
       end
 
       config

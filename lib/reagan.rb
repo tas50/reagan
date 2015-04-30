@@ -47,6 +47,7 @@ module Reagan
     # ensure output syncs to the console so jenkins can record it
     $stdout.sync = $stderr.sync = true
 
+    Config.validate
     check_print_config
     check_empty_update
 
