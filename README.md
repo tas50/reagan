@@ -8,6 +8,8 @@ Trust But Verify - Ruby Jenkins build script that automates the testing of indiv
 * Optionally run any commands in a per cookbook reagan_test.yml file (rubocop? foodcritic? chefspec?)
 * Validate that JSON files parse
 
+See my blog post for examples: http://www.therealtimsmith.com/home/2015/11/trust-but-verify-your-chef-infrastructure/
+
 ##Requirements
 * Ruby 1.9.3 (rbenv Jenkins plugin suggested to get more modern Ruby)
 * Jenkins Github Pull Request Builder plugin
