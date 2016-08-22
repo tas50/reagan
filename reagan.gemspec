@@ -7,16 +7,16 @@ Gem::Specification.new do |s|
   s.summary     = 'Trust But Verify - Ruby build script for Jenkins that automates the testing of Chef cookbooks'
   s.description = s.summary
   s.authors     = ['Tim Smith']
-  s.email       = 'tim@cozy.co'
+  s.email       = 'tsmith@chef.io'
   s.homepage    = 'http://www.github.com/tas50/reagan'
   s.license     = 'Apache-2.0'
 
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.1'
   s.add_dependency 'octokit', '~> 3.0'
   s.add_dependency 'chef', '>= 11.0'
   s.add_dependency 'ridley', '~> 4.0'
-  s.add_development_dependency 'rake', '~> 10.0'
-  s.add_development_dependency 'rubocop', '~> 0.30.1'
+  s.add_development_dependency 'rake', '~> 11.0'
+  s.add_development_dependency 'rubocop', '~> 0.42.0'
 
   s.files         = `git ls-files -z`.split("\x0")
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }

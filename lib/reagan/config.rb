@@ -86,12 +86,12 @@ module Reagan
       config = YAML.load_file(cli_flags['config'])
 
       config
-      rescue Errno::ENOENT
-        puts "ERROR: Cannot load Reagan config file at #{cli_flags['config']}".to_red
-        exit 1
-      rescue Psych::SyntaxError
-        puts "ERROR: Syntax error in Reagan config file at #{cli_flags['config']}".to_red
-        exit 1
+    rescue Errno::ENOENT
+      puts "ERROR: Cannot load Reagan config file at #{cli_flags['config']}".to_red
+      exit 1
+    rescue Psych::SyntaxError
+      puts "ERROR: Syntax error in Reagan config file at #{cli_flags['config']}".to_red
+      exit 1
     end
 
     # make sure the config was properly loaded and contains the various keys we need

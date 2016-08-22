@@ -74,9 +74,9 @@ module Reagan
       Octokit.api_endpoint = Config.settings['github']['api_endpoint'] || 'https://api.github.com'
       gh = Octokit::Client.new(access_token: Config.settings['github']['auth_token'])
       files_from_pull(gh.pull_request_files(Config.settings['github']['repo'], pull_num))
-      rescue
-        puts 'Failed to query pull request contents from Github. Check the api_endpoint, repo, and token.'.to_red
-        exit 1
+    rescue
+      puts 'Failed to query pull request contents from Github. Check the api_endpoint, repo, and token.'.to_red
+      exit 1
     end
 
     # convert pull request response to array of changed files
