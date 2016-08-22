@@ -16,3 +16,5 @@ PerceivedComplexity:
 CyclomaticComplexity:
   Enabled: false
 
+Style/IdenticalConditionalBranches:
+  Enabled: false
