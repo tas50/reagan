@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'reagan'
-  s.version     = '1.0.2'
+  s.version     = '1.1.0'
   s.date        = Date.today.to_s
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ['README.md', 'LICENSE']
