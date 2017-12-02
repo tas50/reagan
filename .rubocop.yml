@@ -1,20 +1,27 @@
-AbcSize:
-  Enabled: false
+Lint/RescueWithoutErrorClass:
+  Exclude:
+    - 'lib/reagan/changeset.rb'
 
-Documentation:
-  Enabled: false
+Metrics/AbcSize:
+  Max: 41
 
-MethodLength:
-  Enabled: false
+Metrics/CyclomaticComplexity:
+  Max: 12
 
-LineLength:
-  Enabled: false
+Metrics/LineLength:
+  Max: 147
 
-PerceivedComplexity:
-  Enabled: false
+Metrics/MethodLength:
+  Max: 28
 
-CyclomaticComplexity:
-  Enabled: false
+Metrics/PerceivedComplexity:
+  Max: 12
+
+Style/GuardClause:
+  Exclude:
+    - 'lib/reagan.rb'
+    - 'lib/reagan/config.rb'
 
 Style/IdenticalConditionalBranches:
-  Enabled: false
+  Exclude:
+    - 'lib/reagan/test_reagan.rb'

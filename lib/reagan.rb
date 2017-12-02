@@ -1,4 +1,4 @@
-# encoding: UTF-8
+
 #
 # Author:: Tim Smith (<tim@cozy.co>)
 # Copyright:: Copyright (c) 2014-2015 Tim Smith
@@ -53,7 +53,7 @@ module Reagan
 
     # print objects that will be tested
     'The following chef objects will be tested'.marquee
-    %w(cookbooks roles environments data_bags).each do |type|
+    %w[cookbooks roles environments data_bags].each do |type|
       unless ChangeSet.files[type].empty?
         puts "#{type}:"
         ChangeSet.files[type].each { |obj| puts '  ' + obj }
@@ -68,7 +68,7 @@ module Reagan
       results << Reagan::TestReagan.new(cookbook).test
     end
 
-    %w(data_bags roles environments).each do |type|
+    %w[data_bags roles environments].each do |type|
       ChangeSet.files[type].each do |file|
         "Testing #{type} file #{file}".marquee
         results << TestJSON.new(file).test

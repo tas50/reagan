@@ -1,3 +1,5 @@
+require 'date'
+
 Gem::Specification.new do |s|
   s.name        = 'reagan'
   s.version     = '1.1.0'
@@ -11,12 +13,12 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://www.github.com/tas50/reagan'
   s.license     = 'Apache-2.0'
 
-  s.required_ruby_version = '>= 2.1'
+  s.required_ruby_version = '>= 2.2'
+  s.add_dependency 'chef', '>= 12.0'
   s.add_dependency 'octokit', '~> 3.0'
-  s.add_dependency 'chef', '>= 11.0'
   s.add_dependency 'ridley', '~> 4.0'
-  s.add_development_dependency 'rake', '~> 11.0'
-  s.add_development_dependency 'rubocop', '~> 0.42.0'
+  s.add_development_dependency 'rake', '~> 12.0'
+  s.add_development_dependency 'rubocop', '~> 0.51.0'
 
   s.files         = `git ls-files -z`.split("\x0")
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }

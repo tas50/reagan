@@ -1,4 +1,4 @@
-# encoding: UTF-8
+
 #
 # Author:: Tim Smith (<tim@cozy.co>)
 # Copyright:: Copyright (c) 2014-2015 Tim Smith

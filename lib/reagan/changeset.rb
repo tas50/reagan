@@ -1,4 +1,4 @@
-# encoding: UTF-8
+
 #
 # Author:: Tim Smith (<tim@cozy.co>)
 # Copyright:: Copyright (c) 2014-2015 Tim Smith
@@ -43,7 +43,7 @@ module Reagan
     # check if the changeset is empty
     def self::empty?
       objects_updated = false
-      %w(cookbooks roles environments data_bags).each do |object|
+      %w[cookbooks roles environments data_bags].each do |object|
         objects_updated = true unless files[object].empty?
       end
       !objects_updated
@@ -52,7 +52,7 @@ module Reagan
     # build a files hash based on the override cookbooks passed by the user
     def self::files_from_override
       files = {}
-      %w(environments roles data_bags).each { |object| files[object] = {} }
+      %w[environments roles data_bags].each { |object| files[object] = {} }
 
       # ensure that the passed cookbooks exist in the workspace first
       cookbooks = []
@@ -96,7 +96,7 @@ module Reagan
     # builds a hash of files / cookbooks that changed based on the pull data from GH
     def self::hash_builder(pull_files)
       files = {}
-      %w(environments roles data_bags cookbooks).each { |object| files[object] = [] }
+      %w[environments roles data_bags cookbooks].each { |object| files[object] = [] }
       cookbooks = []
 
       pull_files.each do |file|

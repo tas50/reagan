@@ -1,4 +1,4 @@
-# encoding: UTF-8
+
 #
 # Author:: Tim Smith (<tim@cozy.co>)
 # Copyright:: Copyright (c) 2014 Tim Smith
@@ -64,7 +64,7 @@ module Reagan
     def test
       commit_v = check_commit_version
       serv_v = check_server_version
-      updated = Gem::Version.new(serv_v) < Gem::Version.new(commit_v) ? true : false
+      updated = Gem::Version.new(serv_v) < Gem::Version.new(commit_v)
 
       puts "Running cookbook version rev'd test:"
       puts "Server version: #{serv_v}".indent
